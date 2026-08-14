@@ -196,7 +196,7 @@ Automatic anomaly detection, automatic remediation, and autonomous incident reso
 
 # 3. Product Architecture
 
-TraceMind contains two independent product paths.
+TraceMind follows a reactive incident investigation architecture.
 
 ## Reactive Investigation Path
 
@@ -312,55 +312,6 @@ RCA
 
 ---
 
-## Proactive Prediction Path
-
-The prediction path is separate from reactive investigation.
-
-```text
-
-Selected Metrics
-
-      │
-
-      ▼
-
-Prediction Engine
-
-      │
-
-      ▼
-
-Rolling Window / Feature Calculation
-
-      │
-
-      ▼
-
-Trend / Degradation Detection
-
-      │
-
-      ▼
-
-Early Warning
-
-      │
-
-      ├── Slack
-
-      └── Dashboard
-
-```
-
-The prediction engine answers:
-
-> "Something may soon go wrong."
-
-The reactive investigation engine answers:
-
-> "Something has gone wrong; what likely caused it?"
-
-The two paths must remain conceptually and operationally separate.
 
 ---
 
@@ -586,40 +537,6 @@ It should not be extracted into a separate service until there is a real reason 
 
 ---
 
-## Prediction Engine
-
-**Technology:** Python
-
-Independent from incident investigation.
-
-Responsibilities:
-
-- query selected metrics
-
-- maintain rolling time windows
-
-- calculate features
-
-- detect degradation
-
-- estimate threshold approach
-
-- generate early warnings
-
-Initial methods should be explainable:
-
-- EWMA
-
-- rate of change
-
-- z-score
-
-- linear trend-to-threshold
-
-Neural networks are unnecessary for the MVP.
-
----
-
 ## Notification Worker
 
 Responsibilities:
@@ -656,7 +573,6 @@ Responsibilities:
 
 - show unknowns
 
-- display early warnings
 
 ---
 
@@ -1800,8 +1716,6 @@ Authoritative for:
 
 - dependency topology
 
-- predictions
-
 - durable business state
 
 ---
@@ -2280,8 +2194,6 @@ Display:
 
 - status
 
-- early warnings
-
 - recent investigations
 
 ## Incident Details
@@ -2420,9 +2332,9 @@ Slack + Basic Dashboard
 
 Prediction is secondary.
 
-RAG is secondary.
+RAG is outside the initial MVP.
 
-Dashboard polish is secondary.
+Dashboard polish is outside the initial MVP.
 
 The reactive investigation path must work first.
 
@@ -2443,8 +2355,6 @@ tracemind/
 │   ├── incident-service/         # Spring Boot
 
 │   ├── investigation-service/    # FastAPI
-
-│   └── prediction-service/       # Python, later
 
 │
 
@@ -2681,7 +2591,5 @@ pgvector supplies operational knowledge retrieval.
 The platform degrades gracefully when evidence providers, notification systems, caches, or AI providers fail.
 
 The reactive investigation golden path is the primary product.
-
-Prediction remains a separate proactive capability.
 
 > **This is the system we are building.**
