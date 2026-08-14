@@ -2541,6 +2541,8 @@ These rules are frozen unless a deliberate architecture review changes them.
 > Logical subsystem boundaries do not automatically justify additional microservices.
 
 ---
+- The engineering blueprint (`docs/architecture/engineering-blueprint.md`) is the authoritative architectural specification. If repository code, README, or CLAUDE.md conflicts with the blueprint, follow the blueprint and ask for clarification rather than making assumptions.
+
 
 # 44. Coding-Agent Guardrails
 
@@ -2593,3 +2595,20 @@ The platform degrades gracefully when evidence providers, notification systems, 
 The reactive investigation golden path is the primary product.
 
 > **This is the system we are building.**
+
+## Engineering Philosophy
+
+When implementing TraceMind:
+
+- Prefer simple, explainable designs over clever abstractions.
+- Every technology must justify its existence.
+- Build the smallest system that demonstrates production-quality engineering.
+- Do not introduce infrastructure before it solves a real problem.
+- Ask before changing architecture.
+
+Before implementing any feature:
+
+1. Explain the implementation plan.
+2. Wait for approval if architecture changes are required.
+3. Implement in small reviewable commits.
+4. Explain trade-offs after implementation.
