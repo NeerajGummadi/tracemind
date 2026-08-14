@@ -2330,8 +2330,6 @@ Slack + Basic Dashboard
 
 ```
 
-Prediction is secondary.
-
 RAG is outside the initial MVP.
 
 Dashboard polish is outside the initial MVP.

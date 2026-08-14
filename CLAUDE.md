@@ -12,9 +12,8 @@ No build tooling, dependency manifests, or source files exist yet. There are no 
 or test — that will change as services are scaffolded, at which point this file should be updated with
 the actual commands.
 
-When implementing here for the first time, follow the structure and stack already declared in
-`docs/architecture/engineering-blueprint.md` (Section 41, "Repository Structure") rather than inventing
-a new layout.
+Repository structure and implementation must remain consistent with
+`docs/architecture/engineering-blueprint.md`.
 
 ## What TraceMind is
 
@@ -24,6 +23,31 @@ detect incidents (upstream monitoring tools like Prometheus Alertmanager/Datadog
 investigates *why* an already-detected incident happened. See `README.md` for the full problem statement
 and `docs/architecture/engineering-blueprint.md` for the complete system design (this is the primary
 architectural reference — read it before making non-trivial changes).
+
+`docs/architecture/engineering-blueprint.md` is the authoritative architectural specification. If
+repository code, README.md, or this file ever conflicts with the blueprint, follow the blueprint and ask
+for clarification rather than making assumptions.
+
+## Engineering philosophy
+
+- Solve one problem exceptionally well; introduce a new technology only when it solves a real production
+  problem, not speculatively.
+- Prefer simple, explainable designs over clever abstractions — every architectural decision must be
+  explainable, not just functional.
+- Build the smallest system that demonstrates production-quality engineering, not the largest distributed
+  system possible.
+- Every important design decision should be documented (see `docs/adrs/`).
+
+## Workflow
+
+- Before writing code for any non-trivial feature, explain the implementation plan first (what changes,
+  which files/components, how it fits the existing architecture) and wait for approval if it implies any
+  architecture change.
+- Do not make architectural assumptions. If the blueprint doesn't specify something (a new service, a new
+  datastore, a new framework, a schema change), ask rather than inventing it — see the guardrails below.
+- Implement in small, reviewable increments rather than large sweeping changes.
+- After implementing, explain the trade-offs made.
+- - Never modify more than one architectural milestone in a single implementation step unless explicitly requested.
 
 ## Architectural invariants (do not violate)
 
@@ -59,18 +83,15 @@ frameworks without approval, and specifically:
 
 ## System architecture
 
-Two independent product paths that must stay conceptually and operationally separate:
+TraceMind follows a single reactive incident investigation architecture (no separate prediction path):
 
-- **Reactive Investigation Path** (primary/MVP): webhook → Connector Service normalizes to
+- **Reactive Investigation Path** (the whole product): webhook → Connector Service normalizes to
   `CanonicalSignalV1` → Kafka (`signals.received.v1`) → Incident Service (idempotency check, incident
   correlation, persist, transactional outbox) → Kafka (`investigation.requested.v1`) → Investigation
   Service (collects evidence from Prometheus/Elasticsearch/dependency graph/pgvector concurrently →
   deterministic Evidence Correlation → Evidence Graph → AI hypothesis generation → AI critic/verifier →
   RCA composer + schema validation) → Incident Service persists result → Notification Worker (Slack,
   fire-and-forget) + Dashboard.
-- **Proactive Prediction Path** (secondary): metrics → Prediction Engine (rolling window, EWMA / rate of
-  change / z-score / linear trend-to-threshold — explainable methods, no neural nets for MVP) → early
-  warning → Slack/Dashboard.
 
 Planned services (per blueprint Section 41 — only two directories exist so far as empty placeholders):
 
@@ -79,7 +100,6 @@ Planned services (per blueprint Section 41 — only two directories exist so far
 | `connector-service` | Spring Boot | Webhook ingestion, payload validation, normalization to `CanonicalSignalV1`, publish to Kafka. Never touches Postgres/Elasticsearch, never runs AI or correlation logic. Returns `202 Accepted`. |
 | `incident-service` | Spring Boot | Consumes canonical signals, idempotency, incident correlation (deterministic, see below), lifecycle management, transactional outbox, incident APIs, persists RCA results. |
 | `investigation-service` (not yet scaffolded) | FastAPI / Python | Evidence collection (Prometheus, Elasticsearch, dependency graph, pgvector runbooks), Evidence Graph construction, AI hypothesis → critic → RCA composition pipeline. |
-| `prediction-service` (later) | Python | Independent of investigation; rolling-window degradation detection. |
 
 Incident correlation (initial version, deterministic — no AI grouping): a signal attaches to an existing
 incident if same org + same environment + same primary service + incident status != `COMPLETED` +
@@ -105,5 +125,5 @@ migrations.
 ## Tech stack
 
 Current: Java 25, Spring Boot, Maven, Docker, PostgreSQL.
-Planned (introduce only when a concrete problem demands it, per the "engineering over complexity"
+Introduced as required by the architecture: (introduce only when a concrete problem demands it, per the "engineering over complexity"
 principle): Kafka, Elasticsearch, Redis, pgvector, OpenTelemetry, Prometheus, Grafana.

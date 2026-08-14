@@ -105,7 +105,7 @@ docs/
 
 services/
 
-infra/
+infrastructure/
 
 scripts/
 ```
@@ -143,9 +143,10 @@ Current stack:
 - Docker
 - PostgreSQL
 
+
 Planned additions:
 
-- Kafka
+- Kafka(introduced as implementation progresses)
 - Elasticsearch
 - Redis
 - OpenTelemetry
