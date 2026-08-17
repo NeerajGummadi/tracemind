@@ -1,0 +1,3 @@
+-- Local-dev bootstrap only. Schema itself is owned by Flyway migrations in
+-- services/incident-service/src/main/resources/db/migration.
+-- gen_random_uuid() is built into PostgreSQL 13+, no extension needed.

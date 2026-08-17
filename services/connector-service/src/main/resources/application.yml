@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: connector-service
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      properties:
+        enable.idempotence: true
+
+server:
+  port: 8081
+
+connector:
+  kafka:
+    send-timeout-ms: 5000
