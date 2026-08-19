@@ -19,5 +19,11 @@ spring:
       auto-offset-reset: earliest
       enable-auto-commit: false
 
+outbox:
+  publisher:
+    batch-size: 50
+    poll-interval-ms: 1000
+    send-timeout-ms: 5000
+
 server:
   port: 8082

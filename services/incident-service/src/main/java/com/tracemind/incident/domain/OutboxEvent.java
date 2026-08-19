@@ -19,6 +19,7 @@ import java.util.UUID;
 public class OutboxEvent {
 
     public static final String STATUS_PENDING = "PENDING";
+    public static final String STATUS_PUBLISHED = "PUBLISHED";
     public static final String EVENT_TYPE_INVESTIGATION_REQUESTED = "investigation.requested";
 
     @Id
@@ -61,6 +62,10 @@ public class OutboxEvent {
         this.createdAt = createdAt;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
     public String getEventType() {
         return eventType;
     }
@@ -71,6 +76,24 @@ public class OutboxEvent {
 
     public UUID getAggregateId() {
         return aggregateId;
+    }
+
+    public String getPayload() {
+        return payload;
+    }
+
+    public Instant getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void markPublished(Instant publishedAt) {
+        this.status = STATUS_PUBLISHED;
+        this.publishedAt = publishedAt;
+    }
+
+    public static OutboxEvent pending(String aggregateType, UUID aggregateId, String eventType, String payload) {
+        return new OutboxEvent(UUID.randomUUID(), aggregateType, aggregateId, eventType, payload,
+                STATUS_PENDING, Instant.now());
     }
 
     public static OutboxEvent investigationRequested(Incident incident, List<String> triggerSignalIds,
