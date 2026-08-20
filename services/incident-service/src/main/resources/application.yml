@@ -18,6 +18,14 @@ spring:
       group-id: incident-service
       auto-offset-reset: earliest
       enable-auto-commit: false
+    producer:
+      properties:
+        # Without this, KafkaTemplate.send() can block for Kafka's own default
+        # of 60s fetching producer metadata against an unreachable broker,
+        # before our own send-timeout-ms (below) ever gets a chance to apply -
+        # found during Milestone F's real Kafka-down validation. Keep in sync
+        # with outbox.publisher.send-timeout-ms.
+        max.block.ms: 5000
 
 outbox:
   publisher:
