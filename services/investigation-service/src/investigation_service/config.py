@@ -32,5 +32,14 @@ class Settings(BaseSettings):
     # also be 2, but undocumented-by-us until now).
     openai_max_retries: int = 2
 
+    prometheus_base_url: str = "http://localhost:9090"
+    prometheus_timeout_seconds: float = 5.0
+    # Padding applied to both sides of [firstObservedAt, lastObservedAt] for
+    # the query_range window - not brittle to exact incident/scrape alignment.
+    prometheus_query_window_seconds: int = 300
+    # Caps how many series-per-metric become evidence - protects against an
+    # unexpectedly high-cardinality result, not just our fixed single-series demo.
+    prometheus_max_series: int = 10
+
 
 settings = Settings()

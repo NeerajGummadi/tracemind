@@ -5,8 +5,9 @@ from investigation_service.contracts.investigation_requested import Investigatio
 
 
 class MetricsCollector(Protocol):
-    """Real implementation (Prometheus-backed) is future work - this interface
-    is what the orchestrator depends on, never a concrete collector."""
+    """StubMetricsCollector (deterministic, for isolated tests) and
+    PrometheusMetricsCollector (real, production wiring) both implement this -
+    the orchestrator depends only on this interface, never a concrete collector."""
 
     async def collect(self, request: InvestigationRequestedV1) -> list[MetricEvidence]: ...
 

@@ -3,6 +3,7 @@ from typing import Literal
 
 from investigation_service.contracts.base import CamelModel
 from investigation_service.contracts.evidence import EvidenceBundle
+from investigation_service.contracts.investigation_metrics import InvestigationMetrics
 from investigation_service.contracts.root_cause_analysis import RootCauseAnalysis
 
 # "COMPLETED"/"FAILED" match the Investigation Service's own component
@@ -34,4 +35,5 @@ class InvestigationResult(CamelModel):
     evidence: EvidenceBundle
     root_cause_analysis: RootCauseAnalysis | None = None
     failure_reason: FailureReason | None = None
+    metrics: InvestigationMetrics | None = None
     generated_at: datetime

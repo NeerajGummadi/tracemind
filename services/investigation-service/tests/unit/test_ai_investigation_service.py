@@ -22,10 +22,20 @@ def make_bundle() -> EvidenceBundle:
     )
 
 
-def fake_response(content: str):
+_DEFAULT_USAGE = SimpleNamespace(prompt_tokens=120, completion_tokens=45, total_tokens=165)
+
+
+def fake_response(content: str, model: str = "gpt-4o-mini-2024-07-18", usage=_DEFAULT_USAGE):
     """Minimal stand-in for the OpenAI SDK's ChatCompletion response shape:
-    response.choices[0].message.content."""
-    return SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content=content))])
+    response.choices[0].message.content, response.model, response.usage.
+    A sentinel default (not None) so callers can explicitly pass usage=None
+    to simulate the SDK's response.usage being genuinely absent, without
+    that colliding with "no override given"."""
+    return SimpleNamespace(
+        choices=[SimpleNamespace(message=SimpleNamespace(content=content))],
+        model=model,
+        usage=usage,
+    )
 
 
 def valid_rca_json(incident_id: str = "INC-1", evidence_ids: list[str] | None = None) -> str:
@@ -47,19 +57,73 @@ def make_service(client: AsyncMock) -> AIInvestigationService:
 
 
 @pytest.mark.asyncio
-async def test_valid_response_returns_root_cause_analysis():
+async def test_valid_response_returns_root_cause_analysis_and_metrics():
     client = MagicMock()
     client.chat.completions.create = AsyncMock(return_value=fake_response(valid_rca_json()))
 
-    rca = await make_service(client).investigate(make_bundle())
+    outcome = await make_service(client).investigate(make_bundle())
 
-    assert rca.incident_id == "INC-1"
-    assert rca.supporting_evidence_ids == ["E-M1", "E-L1"]
+    assert outcome.rca.incident_id == "INC-1"
+    assert outcome.rca.supporting_evidence_ids == ["E-M1", "E-L1"]
     client.chat.completions.create.assert_awaited_once()
+    # Configured params reached the SDK call.
+    _, kwargs = client.chat.completions.create.call_args
+    assert kwargs["temperature"] == 0.0
+    assert kwargs["max_completion_tokens"] == 1000
 
 
 @pytest.mark.asyncio
-async def test_malformed_json_raises_with_correct_reason():
+async def test_ai_latency_is_captured_and_positive():
+    client = MagicMock()
+    client.chat.completions.create = AsyncMock(return_value=fake_response(valid_rca_json()))
+
+    outcome = await make_service(client).investigate(make_bundle())
+
+    assert outcome.metrics.ai_latency_ms >= 0
+    assert isinstance(outcome.metrics.ai_latency_ms, float)
+
+
+@pytest.mark.asyncio
+async def test_token_usage_is_mapped_correctly_from_response():
+    client = MagicMock()
+    usage = SimpleNamespace(prompt_tokens=200, completion_tokens=80, total_tokens=280)
+    client.chat.completions.create = AsyncMock(return_value=fake_response(valid_rca_json(), usage=usage))
+
+    outcome = await make_service(client).investigate(make_bundle())
+
+    assert outcome.metrics.prompt_tokens == 200
+    assert outcome.metrics.completion_tokens == 80
+    assert outcome.metrics.total_tokens == 280
+
+
+@pytest.mark.asyncio
+async def test_model_requested_and_returned_are_both_captured():
+    client = MagicMock()
+    client.chat.completions.create = AsyncMock(
+        return_value=fake_response(valid_rca_json(), model="gpt-4o-mini-2024-07-18")
+    )
+
+    outcome = await make_service(client).investigate(make_bundle())
+
+    assert outcome.metrics.model_requested == "gpt-4o-mini"
+    assert outcome.metrics.model_returned == "gpt-4o-mini-2024-07-18"
+
+
+@pytest.mark.asyncio
+async def test_absent_usage_data_does_not_crash_the_investigation():
+    client = MagicMock()
+    client.chat.completions.create = AsyncMock(return_value=fake_response(valid_rca_json(), usage=None))
+
+    outcome = await make_service(client).investigate(make_bundle())
+
+    assert outcome.rca is not None
+    assert outcome.metrics.prompt_tokens is None
+    assert outcome.metrics.completion_tokens is None
+    assert outcome.metrics.total_tokens is None
+
+
+@pytest.mark.asyncio
+async def test_malformed_json_raises_with_correct_reason_and_preserves_metrics():
     client = MagicMock()
     client.chat.completions.create = AsyncMock(return_value=fake_response("not valid json {{{"))
 
@@ -67,10 +131,13 @@ async def test_malformed_json_raises_with_correct_reason():
         await make_service(client).investigate(make_bundle())
 
     assert exc_info.value.reason == "MALFORMED_RESPONSE"
+    # A real response came back (bad content, but a response) - usage/model are still known.
+    assert exc_info.value.metrics.prompt_tokens == 120
+    assert exc_info.value.metrics.model_returned == "gpt-4o-mini-2024-07-18"
 
 
 @pytest.mark.asyncio
-async def test_schema_validation_failure_raises_with_correct_reason():
+async def test_schema_validation_failure_raises_with_correct_reason_and_preserves_metrics():
     incomplete = json.dumps({"incidentId": "INC-1", "summary": "not enough fields"})
     client = MagicMock()
     client.chat.completions.create = AsyncMock(return_value=fake_response(incomplete))
@@ -79,6 +146,7 @@ async def test_schema_validation_failure_raises_with_correct_reason():
         await make_service(client).investigate(make_bundle())
 
     assert exc_info.value.reason == "SCHEMA_VALIDATION_FAILED"
+    assert exc_info.value.metrics.total_tokens == 165
 
 
 @pytest.mark.asyncio
@@ -106,7 +174,7 @@ async def test_mismatched_incident_id_is_rejected():
 
 
 @pytest.mark.asyncio
-async def test_timeout_raises_with_correct_reason():
+async def test_timeout_raises_with_correct_reason_and_still_captures_latency():
     client = MagicMock()
     client.chat.completions.create = AsyncMock(side_effect=openai.APITimeoutError(request=MagicMock()))
 
@@ -114,6 +182,10 @@ async def test_timeout_raises_with_correct_reason():
         await make_service(client).investigate(make_bundle())
 
     assert exc_info.value.reason == "TIMEOUT"
+    # No response was ever received, but latency (how long we waited) is still knowable.
+    assert exc_info.value.metrics.ai_latency_ms >= 0
+    assert exc_info.value.metrics.model_requested == "gpt-4o-mini"
+    assert exc_info.value.metrics.prompt_tokens is None
 
 
 @pytest.mark.asyncio
@@ -127,6 +199,7 @@ async def test_rate_limit_raises_with_correct_reason():
         await make_service(client).investigate(make_bundle())
 
     assert exc_info.value.reason == "RATE_LIMITED"
+    assert exc_info.value.metrics.ai_latency_ms >= 0
 
 
 @pytest.mark.asyncio
@@ -140,3 +213,4 @@ async def test_generic_api_error_raises_with_correct_reason():
         await make_service(client).investigate(make_bundle())
 
     assert exc_info.value.reason == "API_ERROR"
+    assert exc_info.value.metrics.ai_latency_ms >= 0

@@ -3,11 +3,13 @@ from datetime import datetime, timezone
 
 import pytest
 
-from investigation_service.ai.ai_investigation_service import AIInvestigationError
+from investigation_service.ai.ai_investigation_service import AICallMetrics, AIInvestigationError, AIInvestigationOutcome
 from investigation_service.contracts.evidence import DependencyEvidence, LogEvidence, MetricEvidence
 from investigation_service.contracts.investigation_requested import InvestigationRequestedV1
 from investigation_service.contracts.root_cause_analysis import RootCauseAnalysis
 from investigation_service.evidence.aggregator import EvidenceAggregator
+from investigation_service.observability import cost_estimator
+from investigation_service.observability.cost_estimator import ModelPricing
 from investigation_service.orchestration.orchestrator import InvestigationOrchestrator
 
 
@@ -32,7 +34,7 @@ class FakeAIInvestigationServiceSuccess:
 
     async def investigate(self, evidence_bundle):
         self.received_bundle = evidence_bundle
-        return RootCauseAnalysis(
+        rca = RootCauseAnalysis(
             incident_id=evidence_bundle.incident_id,
             summary="s",
             probable_root_cause="p",
@@ -40,11 +42,23 @@ class FakeAIInvestigationServiceSuccess:
             supporting_evidence_ids=["E-M"],
             remediation_steps=["do the thing"],
         )
+        metrics = AICallMetrics(
+            ai_latency_ms=42.0,
+            model_requested="gpt-4o-mini",
+            model_returned="gpt-4o-mini-2024-07-18",
+            prompt_tokens=100,
+            completion_tokens=50,
+            total_tokens=150,
+        )
+        return AIInvestigationOutcome(rca=rca, metrics=metrics)
 
 
 class FakeAIInvestigationServiceFailure:
     async def investigate(self, evidence_bundle):
-        raise AIInvestigationError("TIMEOUT", "simulated timeout")
+        raise AIInvestigationError(
+            "TIMEOUT", "simulated timeout",
+            AICallMetrics(ai_latency_ms=30.0, model_requested="gpt-4o-mini"),
+        )
 
 
 def make_request() -> InvestigationRequestedV1:
@@ -136,3 +150,100 @@ async def test_investigate_runs_collectors_concurrently():
     # Concurrent execution means logs and deps finish while metrics is still sleeping.
     assert call_order.index("logs-end") < call_order.index("metrics-end")
     assert call_order.index("deps-end") < call_order.index("metrics-end")
+
+
+@pytest.mark.asyncio
+async def test_total_investigation_duration_is_captured():
+    orchestrator = build_orchestrator(FakeAIInvestigationServiceSuccess())
+
+    result = await orchestrator.investigate(make_request())
+
+    assert result.metrics is not None
+    assert result.metrics.total_duration_ms is not None
+    assert result.metrics.total_duration_ms >= 0
+
+
+@pytest.mark.asyncio
+async def test_evidence_collection_duration_reflects_wall_clock_not_sum_of_parts():
+    class SlowMetricsCollector:
+        async def collect(self, request):
+            await asyncio.sleep(0.05)
+            return []
+
+    class SlowLogsCollector:
+        async def collect(self, request):
+            await asyncio.sleep(0.05)
+            return []
+
+    class SlowDependencyCollector:
+        async def collect(self, request):
+            await asyncio.sleep(0.05)
+            return []
+
+    orchestrator = build_orchestrator(
+        FakeAIInvestigationServiceSuccess(),
+        metrics=SlowMetricsCollector(),
+        logs=SlowLogsCollector(),
+        deps=SlowDependencyCollector(),
+    )
+
+    result = await orchestrator.investigate(make_request())
+
+    # Three ~50ms collectors run concurrently: total should be close to 50ms,
+    # nowhere near the ~150ms it would be if they ran sequentially/summed.
+    assert result.metrics.evidence_collection_duration_ms is not None
+    assert result.metrics.evidence_collection_duration_ms < 120
+
+
+@pytest.mark.asyncio
+async def test_ai_metrics_are_propagated_into_investigation_metrics_on_success():
+    orchestrator = build_orchestrator(FakeAIInvestigationServiceSuccess())
+
+    result = await orchestrator.investigate(make_request())
+
+    assert result.metrics.open_ai_latency_ms == 42.0
+    assert result.metrics.prompt_tokens == 100
+    assert result.metrics.completion_tokens == 50
+    assert result.metrics.total_tokens == 150
+    assert result.metrics.model == "gpt-4o-mini-2024-07-18"  # prefers model_returned over model_requested
+
+
+@pytest.mark.asyncio
+async def test_failed_result_retains_available_timing_metrics():
+    orchestrator = build_orchestrator(FakeAIInvestigationServiceFailure())
+
+    result = await orchestrator.investigate(make_request())
+
+    assert result.status == "FAILED"
+    assert result.metrics is not None
+    assert result.metrics.total_duration_ms is not None
+    assert result.metrics.evidence_collection_duration_ms is not None
+    assert result.metrics.open_ai_latency_ms == 30.0
+    # No response was ever received for a TIMEOUT, so no token counts.
+    assert result.metrics.prompt_tokens is None
+    assert result.metrics.model == "gpt-4o-mini"  # falls back to model_requested
+
+
+@pytest.mark.asyncio
+async def test_estimated_cost_is_populated_when_pricing_is_configured(monkeypatch):
+    monkeypatch.setitem(
+        cost_estimator.MODEL_PRICING,
+        "gpt-4o-mini-2024-07-18",
+        ModelPricing(input_cost_per_million_tokens=1.0, output_cost_per_million_tokens=2.0),
+    )
+    orchestrator = build_orchestrator(FakeAIInvestigationServiceSuccess())
+
+    result = await orchestrator.investigate(make_request())
+
+    # 100 prompt tokens * $1/1M + 50 completion tokens * $2/1M
+    assert result.metrics.estimated_api_cost_usd == pytest.approx(0.0001 + 0.0001)
+
+
+@pytest.mark.asyncio
+async def test_estimated_cost_is_none_when_pricing_is_unconfigured():
+    orchestrator = build_orchestrator(FakeAIInvestigationServiceSuccess())
+
+    result = await orchestrator.investigate(make_request())
+
+    # No entry for "gpt-4o-mini-2024-07-18" in MODEL_PRICING by default.
+    assert result.metrics.estimated_api_cost_usd is None

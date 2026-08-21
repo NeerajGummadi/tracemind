@@ -65,7 +65,9 @@ def mock_openai_client_returning(rca_json: dict) -> MagicMock:
     end-to-end without depending on network access or a real API key."""
     client = MagicMock()
     fake_response = SimpleNamespace(
-        choices=[SimpleNamespace(message=SimpleNamespace(content=json.dumps(rca_json)))]
+        choices=[SimpleNamespace(message=SimpleNamespace(content=json.dumps(rca_json)))],
+        model="gpt-4o-mini-2024-07-18",
+        usage=SimpleNamespace(prompt_tokens=250, completion_tokens=90, total_tokens=340),
     )
     client.chat.completions.create = AsyncMock(return_value=fake_response)
     return client
@@ -156,6 +158,18 @@ async def test_investigation_requested_flows_through_ai_reasoning_to_published_r
             assert len(result["evidence"]["metrics"]) == 1
             assert len(result["evidence"]["logs"]) == 1
             assert len(result["evidence"]["dependencies"]) == 1
+
+            metrics = result["metrics"]
+            assert metrics is not None
+            assert metrics["totalDurationMs"] >= 0
+            assert metrics["evidenceCollectionDurationMs"] >= 0
+            assert metrics["openAiLatencyMs"] >= 0
+            assert metrics["promptTokens"] == 250
+            assert metrics["completionTokens"] == 90
+            assert metrics["totalTokens"] == 340
+            assert metrics["model"] == "gpt-4o-mini-2024-07-18"
+            # No pricing configured for this model - must not fabricate a cost.
+            assert metrics["estimatedApiCostUsd"] is None
         finally:
             await result_consumer.stop()
     finally:
@@ -184,7 +198,11 @@ async def test_ai_failure_still_publishes_a_failed_result_with_evidence(bootstra
     try:
         broken_client = MagicMock()
         broken_client.chat.completions.create = AsyncMock(
-            return_value=SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content="not json"))])
+            return_value=SimpleNamespace(
+                choices=[SimpleNamespace(message=SimpleNamespace(content="not json"))],
+                model="gpt-4o-mini-2024-07-18",
+                usage=SimpleNamespace(prompt_tokens=200, completion_tokens=10, total_tokens=210),
+            )
         )
         ai_investigation_service = AIInvestigationService(
             client=broken_client, prompt_builder=PromptBuilder(), model="gpt-4o-mini",
@@ -236,6 +254,16 @@ async def test_ai_failure_still_publishes_a_failed_result_with_evidence(bootstra
             assert result["rootCauseAnalysis"] is None
             # The investigation didn't crash, and evidence is still preserved.
             assert len(result["evidence"]["metrics"]) == 1
+
+            # A real (if malformed) response came back, so latency, token
+            # usage, and model are still known even though the investigation
+            # failed - preserved in the FAILED result's metrics.
+            metrics = result["metrics"]
+            assert metrics is not None
+            assert metrics["totalDurationMs"] >= 0
+            assert metrics["openAiLatencyMs"] >= 0
+            assert metrics["promptTokens"] == 200
+            assert metrics["model"] == "gpt-4o-mini-2024-07-18"
         finally:
             await result_consumer.stop()
     finally:

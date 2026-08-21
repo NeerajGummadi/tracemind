@@ -2,13 +2,15 @@ import asyncio
 import logging
 from contextlib import asynccontextmanager
 
+import httpx
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from fastapi import FastAPI
 
 from investigation_service.ai.ai_investigation_service import AIInvestigationService
 from investigation_service.ai.openai_client import create_openai_client
 from investigation_service.ai.prompt_builder import PromptBuilder
-from investigation_service.collectors.stub import StubDependencyCollector, StubLogsCollector, StubMetricsCollector
+from investigation_service.collectors.prometheus import PrometheusMetricsCollector
+from investigation_service.collectors.stub import StubDependencyCollector, StubLogsCollector
 from investigation_service.config import settings
 from investigation_service.evidence.aggregator import EvidenceAggregator
 from investigation_service.kafka.consumer import InvestigationRequestConsumer
@@ -33,6 +35,8 @@ async def lifespan(app: FastAPI):
     await consumer.start()
     await producer.start()
 
+    prometheus_http_client = httpx.AsyncClient(timeout=settings.prometheus_timeout_seconds)
+
     ai_investigation_service = AIInvestigationService(
         client=create_openai_client(settings),
         prompt_builder=PromptBuilder(),
@@ -41,7 +45,12 @@ async def lifespan(app: FastAPI):
         max_output_tokens=settings.openai_max_output_tokens,
     )
     orchestrator = InvestigationOrchestrator(
-        metrics_collector=StubMetricsCollector(),
+        metrics_collector=PrometheusMetricsCollector(
+            client=prometheus_http_client,
+            base_url=settings.prometheus_base_url,
+            window_seconds=settings.prometheus_query_window_seconds,
+            max_series=settings.prometheus_max_series,
+        ),
         logs_collector=StubLogsCollector(),
         dependency_collector=StubDependencyCollector(),
         aggregator=EvidenceAggregator(),
@@ -63,6 +72,7 @@ async def lifespan(app: FastAPI):
             pass
         await consumer.stop()
         await producer.stop()
+        await prometheus_http_client.aclose()
         logger.info("Investigation Service stopped")
 
 

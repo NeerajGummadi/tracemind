@@ -30,6 +30,17 @@ class PromptBuilder:
 
     def _build_instructions(self) -> str:
         schema = json.dumps(RootCauseAnalysis.model_json_schema(), indent=2)
+        example = json.dumps(
+            {
+                "incidentId": "INC-0",
+                "summary": "Example only - do not copy these values.",
+                "probableRootCause": "Example only - do not copy these values.",
+                "confidence": 0.5,
+                "supportingEvidenceIds": ["E-EXAMPLE-1"],
+                "remediationSteps": ["Example only - do not copy these values."],
+            },
+            indent=2,
+        )
         return (
             "You are an incident root-cause analysis assistant for TraceMind.\n\n"
             "RULES (must follow exactly):\n"
@@ -43,7 +54,14 @@ class PromptBuilder:
             "plainly in the summary rather than guessing.\n"
             "- Respond with a single JSON object only - no prose, no markdown, no "
             "code fences. The JSON must conform exactly to this schema:\n\n"
-            f"{schema}"
+            f"{schema}\n\n"
+            "- Your response must be an INSTANCE of that schema (an object with the "
+            "fields incidentId, summary, probableRootCause, confidence, "
+            "supportingEvidenceIds, remediationSteps filled with real analysis) - "
+            "never the schema document itself. For example, a validly-shaped "
+            "response looks like this (values below are illustrative placeholders, "
+            "not real evidence - use the actual evidence supplied instead):\n\n"
+            f"{example}"
         )
 
     def _build_facts(self, evidence: EvidenceBundle) -> str:
