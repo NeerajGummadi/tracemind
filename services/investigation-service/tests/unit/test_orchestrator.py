@@ -1,9 +1,12 @@
+import asyncio
 from datetime import datetime, timezone
 
 import pytest
 
+from investigation_service.ai.ai_investigation_service import AIInvestigationError
 from investigation_service.contracts.evidence import DependencyEvidence, LogEvidence, MetricEvidence
 from investigation_service.contracts.investigation_requested import InvestigationRequestedV1
+from investigation_service.contracts.root_cause_analysis import RootCauseAnalysis
 from investigation_service.evidence.aggregator import EvidenceAggregator
 from investigation_service.orchestration.orchestrator import InvestigationOrchestrator
 
@@ -23,6 +26,27 @@ class FakeDependencyCollector:
         return [DependencyEvidence(evidence_id="E-D", entity="x", fact="f", observed_at=request.last_observed_at, depends_on="y")]
 
 
+class FakeAIInvestigationServiceSuccess:
+    def __init__(self):
+        self.received_bundle = None
+
+    async def investigate(self, evidence_bundle):
+        self.received_bundle = evidence_bundle
+        return RootCauseAnalysis(
+            incident_id=evidence_bundle.incident_id,
+            summary="s",
+            probable_root_cause="p",
+            confidence=0.9,
+            supporting_evidence_ids=["E-M"],
+            remediation_steps=["do the thing"],
+        )
+
+
+class FakeAIInvestigationServiceFailure:
+    async def investigate(self, evidence_bundle):
+        raise AIInvestigationError("TIMEOUT", "simulated timeout")
+
+
 def make_request() -> InvestigationRequestedV1:
     now = datetime.now(timezone.utc)
     return InvestigationRequestedV1(
@@ -32,29 +56,50 @@ def make_request() -> InvestigationRequestedV1:
     )
 
 
-@pytest.mark.asyncio
-async def test_investigate_runs_all_collectors_and_produces_stub_result():
-    orchestrator = InvestigationOrchestrator(
-        metrics_collector=FakeMetricsCollector(),
-        logs_collector=FakeLogsCollector(),
-        dependency_collector=FakeDependencyCollector(),
+def build_orchestrator(ai_service, metrics=None, logs=None, deps=None) -> InvestigationOrchestrator:
+    return InvestigationOrchestrator(
+        metrics_collector=metrics or FakeMetricsCollector(),
+        logs_collector=logs or FakeLogsCollector(),
+        dependency_collector=deps or FakeDependencyCollector(),
         aggregator=EvidenceAggregator(),
+        ai_investigation_service=ai_service,
     )
+
+
+@pytest.mark.asyncio
+async def test_investigate_collects_evidence_and_completes_with_rca_on_ai_success():
+    ai_service = FakeAIInvestigationServiceSuccess()
+    orchestrator = build_orchestrator(ai_service)
 
     result = await orchestrator.investigate(make_request())
 
     assert result.incident_id == "INC-9"
-    assert result.status == "EVIDENCE_COLLECTED"
+    assert result.status == "COMPLETED"
+    assert result.failure_reason is None
+    assert result.root_cause_analysis is not None
+    assert result.root_cause_analysis.incident_id == "INC-9"
     assert len(result.evidence.metrics) == 1
     assert len(result.evidence.logs) == 1
     assert len(result.evidence.dependencies) == 1
-    assert result.evidence.incident_id == "INC-9"
+    # The AI service received the aggregated bundle, not the raw request.
+    assert ai_service.received_bundle.incident_id == "INC-9"
+
+
+@pytest.mark.asyncio
+async def test_investigate_returns_failed_result_on_ai_failure_without_crashing():
+    orchestrator = build_orchestrator(FakeAIInvestigationServiceFailure())
+
+    result = await orchestrator.investigate(make_request())
+
+    assert result.status == "FAILED"
+    assert result.failure_reason == "TIMEOUT"
+    assert result.root_cause_analysis is None
+    # Evidence is still present even though AI reasoning failed (blueprint Section 31).
+    assert len(result.evidence.metrics) == 1
 
 
 @pytest.mark.asyncio
 async def test_investigate_runs_collectors_concurrently():
-    import asyncio
-
     call_order = []
 
     class SlowMetricsCollector:
@@ -78,11 +123,11 @@ async def test_investigate_runs_collectors_concurrently():
             call_order.append("deps-end")
             return []
 
-    orchestrator = InvestigationOrchestrator(
-        metrics_collector=SlowMetricsCollector(),
-        logs_collector=SlowLogsCollector(),
-        dependency_collector=SlowDependencyCollector(),
-        aggregator=EvidenceAggregator(),
+    orchestrator = build_orchestrator(
+        FakeAIInvestigationServiceSuccess(),
+        metrics=SlowMetricsCollector(),
+        logs=SlowLogsCollector(),
+        deps=SlowDependencyCollector(),
     )
 
     await orchestrator.investigate(make_request())

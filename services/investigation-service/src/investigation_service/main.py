@@ -5,6 +5,9 @@ from contextlib import asynccontextmanager
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from fastapi import FastAPI
 
+from investigation_service.ai.ai_investigation_service import AIInvestigationService
+from investigation_service.ai.openai_client import create_openai_client
+from investigation_service.ai.prompt_builder import PromptBuilder
 from investigation_service.collectors.stub import StubDependencyCollector, StubLogsCollector, StubMetricsCollector
 from investigation_service.config import settings
 from investigation_service.evidence.aggregator import EvidenceAggregator
@@ -30,11 +33,19 @@ async def lifespan(app: FastAPI):
     await consumer.start()
     await producer.start()
 
+    ai_investigation_service = AIInvestigationService(
+        client=create_openai_client(settings),
+        prompt_builder=PromptBuilder(),
+        model=settings.openai_model,
+        temperature=settings.openai_temperature,
+        max_output_tokens=settings.openai_max_output_tokens,
+    )
     orchestrator = InvestigationOrchestrator(
         metrics_collector=StubMetricsCollector(),
         logs_collector=StubLogsCollector(),
         dependency_collector=StubDependencyCollector(),
         aggregator=EvidenceAggregator(),
+        ai_investigation_service=ai_investigation_service,
     )
     publisher = InvestigationResultPublisher(producer, settings.investigation_results_topic)
     request_consumer = InvestigationRequestConsumer(consumer, orchestrator, publisher)

@@ -1,7 +1,7 @@
 [project]
 name = "investigation-service"
 version = "0.1.0"
-description = "TraceMind Investigation Service - evidence collection foundation (Milestone G, no AI yet)"
+description = "TraceMind Investigation Service - evidence collection + AI hypothesis generation"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.115",
@@ -9,6 +9,7 @@ dependencies = [
     "pydantic>=2.9",
     "pydantic-settings>=2.6",
     "aiokafka>=0.11",
+    "openai>=1.50",
 ]
 
 [project.optional-dependencies]

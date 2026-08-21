@@ -12,5 +12,25 @@ class Settings(BaseSettings):
     kafka_consumer_group_id: str = "investigation-service"
     http_port: int = 8083
 
+    # No hardcoded default on purpose - create_openai_client() fails fast if
+    # this is empty, at actual app startup (main.py's lifespan constructs the
+    # client before serving traffic). Left as an empty-string default here
+    # rather than a required field so importing this module never fails just
+    # because OPENAI_API_KEY isn't set - unit tests that don't touch OpenAI
+    # shouldn't need it in their environment.
+    openai_api_key: str = ""
+    openai_model: str = "gpt-4o-mini"
+    openai_timeout_seconds: float = 30.0
+    # 0 = deterministic, reproducible RCA output - appropriate for a
+    # structured-JSON, grounded-in-evidence task, not creative generation.
+    openai_temperature: float = 0.0
+    # Comfortable headroom for the RootCauseAnalysis JSON shape (a handful of
+    # short strings + a few array items), explicit rather than relying on
+    # the model's full output ceiling.
+    openai_max_output_tokens: int = 1000
+    # Explicit rather than relying on the SDK's own default (which happens to
+    # also be 2, but undocumented-by-us until now).
+    openai_max_retries: int = 2
+
 
 settings = Settings()
