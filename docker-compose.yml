@@ -62,3 +62,17 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  loki:
+    image: grafana/loki:3.5.3
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./infrastructure/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+    command:
+      - -config.file=/etc/loki/local-config.yaml
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3100/ready || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

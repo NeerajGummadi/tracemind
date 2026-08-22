@@ -41,5 +41,12 @@ class Settings(BaseSettings):
     # unexpectedly high-cardinality result, not just our fixed single-series demo.
     prometheus_max_series: int = 10
 
+    loki_base_url: str = "http://localhost:3100"
+    loki_timeout_seconds: float = 5.0
+    loki_query_window_seconds: int = 300
+    # Caps raw log lines fetched from Loki (also passed as the query's own
+    # `limit` param) - grouping into LogEvidence happens after this cap.
+    loki_max_entries: int = 200
+
 
 settings = Settings()

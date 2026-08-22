@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 
 import httpx
 
+from investigation_service.collectors.label_query_escaping import escape_label_value
 from investigation_service.contracts.evidence import MetricEvidence
 from investigation_service.contracts.investigation_requested import InvestigationRequestedV1
 
@@ -23,13 +24,6 @@ _METRIC_UNITS: dict[str, str] = {
     "db_connection_pool_max": "connections",
     "db_connection_pool_utilization_percent": "percent",
 }
-
-
-def _escape_label_value(value: str) -> str:
-    """primaryService/environment originate from Alertmanager labels via
-    Connector Service - treat them as untrusted input reaching a query
-    language, same as any string interpolated into SQL/PromQL/etc."""
-    return value.replace("\\", "\\\\").replace('"', '\\"')
 
 
 class PrometheusMetricsCollector:
@@ -78,8 +72,8 @@ class PrometheusMetricsCollector:
 
     async def _query_range(self, metric_name: str, request: InvestigationRequestedV1) -> list[dict]:
         query = (
-            f'{metric_name}{{service="{_escape_label_value(request.primary_service)}", '
-            f'environment="{_escape_label_value(request.environment)}"}}'
+            f'{metric_name}{{service="{escape_label_value(request.primary_service)}", '
+            f'environment="{escape_label_value(request.environment)}"}}'
         )
         start = request.first_observed_at.timestamp() - self._window_seconds
         end = request.last_observed_at.timestamp() + self._window_seconds
