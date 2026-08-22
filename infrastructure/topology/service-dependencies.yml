@@ -1,0 +1,14 @@
+# Static service dependency graph (blueprint Section 13 - "Dependency Graph").
+# Source of truth for StaticDependencyCollector. Each service lists its direct
+# dependencies; the collector traverses this at query time (bounded by
+# DEPENDENCY_MAX_DEPTH) - relationships are never hardcoded in Python.
+#
+# Kept to what's actually part of the MVP demo scenario exercised by real
+# validation runs (payment-service's DB-connection-pool-exhaustion alert) -
+# no fictional services (fraud-service, notification-service) or
+# not-yet-deployed dependencies (redis - not in docker-compose.yml, never
+# introduced per CLAUDE.md's tech stack).
+services:
+  payment-service:
+    depends_on:
+      - payment-service-db

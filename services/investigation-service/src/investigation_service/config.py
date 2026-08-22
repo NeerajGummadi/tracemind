@@ -48,5 +48,12 @@ class Settings(BaseSettings):
     # `limit` param) - grouping into LogEvidence happens after this cap.
     loki_max_entries: int = 200
 
+    # Relative to repo root by default - not an absolute machine path.
+    # Override via env var when the process's working directory differs.
+    dependency_graph_path: str = "infrastructure/topology/service-dependencies.yml"
+    # 1 = direct dependencies only. 2 = one additional hop beyond direct,
+    # per Milestone L's "at most one additional hop" MVP scope.
+    dependency_max_depth: int = 2
+
 
 settings = Settings()

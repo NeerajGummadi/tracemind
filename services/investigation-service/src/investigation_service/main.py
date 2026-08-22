@@ -11,7 +11,7 @@ from investigation_service.ai.openai_client import create_openai_client
 from investigation_service.ai.prompt_builder import PromptBuilder
 from investigation_service.collectors.loki import LokiLogsCollector
 from investigation_service.collectors.prometheus import PrometheusMetricsCollector
-from investigation_service.collectors.stub import StubDependencyCollector
+from investigation_service.collectors.static_dependency import StaticDependencyCollector, load_topology
 from investigation_service.config import settings
 from investigation_service.evidence.aggregator import EvidenceAggregator
 from investigation_service.kafka.consumer import InvestigationRequestConsumer
@@ -38,6 +38,8 @@ async def lifespan(app: FastAPI):
 
     prometheus_http_client = httpx.AsyncClient(timeout=settings.prometheus_timeout_seconds)
     loki_http_client = httpx.AsyncClient(timeout=settings.loki_timeout_seconds)
+    # Loaded once, fails fast on a malformed file - never per-investigation I/O.
+    dependency_topology = load_topology(settings.dependency_graph_path)
 
     ai_investigation_service = AIInvestigationService(
         client=create_openai_client(settings),
@@ -59,7 +61,10 @@ async def lifespan(app: FastAPI):
             window_seconds=settings.loki_query_window_seconds,
             max_entries=settings.loki_max_entries,
         ),
-        dependency_collector=StubDependencyCollector(),
+        dependency_collector=StaticDependencyCollector(
+            topology=dependency_topology,
+            max_depth=settings.dependency_max_depth,
+        ),
         aggregator=EvidenceAggregator(),
         ai_investigation_service=ai_investigation_service,
     )
