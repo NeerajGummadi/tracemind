@@ -16,3 +16,8 @@ class InvestigationRequestedV1(CamelModel):
     first_observed_at: datetime
     last_observed_at: datetime
     trigger_signal_ids: list[str]
+    # Milestone M - identifies exactly one AI investigation attempt; an
+    # incident may have had several, so incidentId alone is not enough to
+    # match a request to "this specific run" for idempotency/result-matching.
+    investigation_run_id: str
+    input_signal_version: int

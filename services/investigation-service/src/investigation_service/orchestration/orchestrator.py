@@ -66,6 +66,7 @@ class InvestigationOrchestrator:
             self._log_completion(request.incident_id, "FAILED", metrics, collection_timings)
             return InvestigationResult(
                 incident_id=request.incident_id,
+                investigation_run_id=request.investigation_run_id,
                 status="FAILED",
                 evidence=bundle,
                 failure_reason=e.reason,
@@ -78,6 +79,7 @@ class InvestigationOrchestrator:
         self._log_completion(request.incident_id, "COMPLETED", metrics, collection_timings)
         return InvestigationResult(
             incident_id=request.incident_id,
+            investigation_run_id=request.investigation_run_id,
             status="COMPLETED",
             evidence=bundle,
             root_cause_analysis=outcome.rca,

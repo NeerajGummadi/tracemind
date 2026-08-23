@@ -96,8 +96,8 @@ public class OutboxEvent {
                 STATUS_PENDING, Instant.now());
     }
 
-    public static OutboxEvent investigationRequested(Incident incident, List<String> triggerSignalIds,
-                                                       ObjectMapper objectMapper) {
+    public static OutboxEvent investigationRequested(Incident incident, InvestigationRun run,
+                                                       List<String> triggerSignalIds, ObjectMapper objectMapper) {
         InvestigationRequestedV1 event = new InvestigationRequestedV1(
                 "evt-" + UUID.randomUUID(),
                 "1.0",
@@ -107,7 +107,9 @@ public class OutboxEvent {
                 incident.getSeverity(),
                 incident.getFirstObservedAt(),
                 incident.getLastObservedAt(),
-                triggerSignalIds);
+                triggerSignalIds,
+                run.getId().toString(),
+                run.getInputSignalVersion());
         String payloadJson;
         try {
             payloadJson = objectMapper.writeValueAsString(event);

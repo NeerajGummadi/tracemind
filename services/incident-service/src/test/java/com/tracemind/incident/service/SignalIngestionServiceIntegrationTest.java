@@ -1,8 +1,11 @@
 package com.tracemind.incident.service;
 
 import com.tracemind.incident.contract.CanonicalSignalV1;
+import com.tracemind.incident.domain.Incident;
+import com.tracemind.incident.domain.InvestigationRun;
 import com.tracemind.incident.repository.IncidentRepository;
 import com.tracemind.incident.repository.IncidentSignalRepository;
+import com.tracemind.incident.repository.InvestigationRunRepository;
 import com.tracemind.incident.repository.OutboxEventRepository;
 import com.tracemind.incident.repository.SignalRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -54,13 +57,18 @@ class SignalIngestionServiceIntegrationTest {
     @Autowired
     private OutboxEventRepository outboxEventRepository;
 
+    @Autowired
+    private InvestigationRunRepository investigationRunRepository;
+
     @AfterEach
     void cleanUp() {
         // Each ingest() call runs in its own transaction, same as in production via the
         // listener - not wrapping the test in a rolled-back transaction, so state must be
-        // cleared explicitly between tests, in FK-safe order.
+        // cleared explicitly between tests, in FK-safe order. investigation_runs FKs to
+        // incidents, so it must be cleared before incidentRepository.deleteAll().
         outboxEventRepository.deleteAll();
         incidentSignalRepository.deleteAll();
+        investigationRunRepository.deleteAll();
         incidentRepository.deleteAll();
         signalRepository.deleteAll();
     }
@@ -73,13 +81,25 @@ class SignalIngestionServiceIntegrationTest {
 
         assertThat(signalRepository.findAll()).hasSize(1);
         assertThat(incidentRepository.findAll()).hasSize(1);
-        assertThat(incidentRepository.findAll().get(0).getStatus()).isEqualTo("QUEUED");
+        Incident incident = incidentRepository.findAll().get(0);
+        assertThat(incident.getStatus()).isEqualTo("QUEUED");
         assertThat(incidentSignalRepository.findAll()).hasSize(1);
         assertThat(outboxEventRepository.findAll()).hasSize(1);
         assertThat(outboxEventRepository.findAll().get(0).getEventType()).isEqualTo("investigation.requested");
         assertThat(outboxEventRepository.findAll().get(0).getStatus()).isEqualTo("PENDING");
-        assertThat(outboxEventRepository.findAll().get(0).getAggregateId())
-                .isEqualTo(incidentRepository.findAll().get(0).getId());
+        assertThat(outboxEventRepository.findAll().get(0).getAggregateId()).isEqualTo(incident.getId());
+
+        // Milestone M: the first signal also launches the incident's first InvestigationRun.
+        assertThat(incident.getSignalVersion()).isEqualTo(1);
+        assertThat(incident.getCurrentInvestigationRunId()).isNotNull();
+        assertThat(incident.isNeedsReinvestigation()).isFalse();
+        assertThat(investigationRunRepository.findAll()).hasSize(1);
+        InvestigationRun run = investigationRunRepository.findAll().get(0);
+        assertThat(run.getId()).isEqualTo(incident.getCurrentInvestigationRunId());
+        assertThat(run.getIncidentId()).isEqualTo(incident.getId());
+        assertThat(run.getInputSignalVersion()).isEqualTo(1);
+        assertThat(run.getStatus()).isEqualTo(InvestigationRun.STATUS_RUNNING);
+        assertThat(run.getTriggerReason()).isEqualTo(InvestigationRun.TRIGGER_REASON_NEW_INCIDENT);
     }
 
     @Test
@@ -114,8 +134,16 @@ class SignalIngestionServiceIntegrationTest {
         assertThat(signalRepository.findAll()).hasSize(2);
         assertThat(incidentRepository.findAll()).hasSize(1);
         assertThat(incidentSignalRepository.findAll()).hasSize(2);
-        // outbox row is only written on new-incident creation, not on correlation into an existing one
+        // Milestone M: the first signal's InvestigationRun is still RUNNING (never
+        // completed via a result), so the second signal coalesces into
+        // needsReinvestigation instead of launching a second concurrent run - only one
+        // outbox row / one InvestigationRun ever gets created here.
         assertThat(outboxEventRepository.findAll()).hasSize(1);
+        assertThat(investigationRunRepository.findAll()).hasSize(1);
+
+        Incident incident = incidentRepository.findAll().get(0);
+        assertThat(incident.getSignalVersion()).isEqualTo(2);
+        assertThat(incident.isNeedsReinvestigation()).isTrue();
     }
 
     @Test

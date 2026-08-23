@@ -31,6 +31,9 @@ class InvestigationResult(CamelModel):
 
     incident_id: str
     schema_version: str = "1.0"
+    # Milestone M - echoed back from the request so Incident Service can match
+    # this result to the specific InvestigationRun it belongs to.
+    investigation_run_id: str
     status: InvestigationStatus
     evidence: EvidenceBundle
     root_cause_analysis: RootCauseAnalysis | None = None

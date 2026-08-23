@@ -18,6 +18,8 @@ def make_request() -> InvestigationRequestedV1:
         first_observed_at=now,
         last_observed_at=now,
         trigger_signal_ids=["evt-1"],
+        investigation_run_id="run-1",
+        input_signal_version=1,
     )
 
 

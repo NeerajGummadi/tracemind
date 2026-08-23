@@ -50,4 +50,28 @@ public class KafkaConsumerConfig {
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }
+
+    /**
+     * investigation.results.v1 is consumed as a raw JSON string, not a typed
+     * Java object (Milestone M) - Incident Service only needs to act on
+     * investigationRunId/status/failureReason (see InvestigationResultService)
+     * and stores the rest verbatim, so there's no value in maintaining a full
+     * Java mirror of the Python evidence/RCA schema.
+     */
+    @Bean
+    public ConsumerFactory<String, String> investigationResultConsumerFactory(KafkaProperties kafkaProperties) {
+        return new DefaultKafkaConsumerFactory<>(
+                kafkaProperties.buildConsumerProperties(),
+                new StringDeserializer(),
+                new StringDeserializer());
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, String> investigationResultKafkaListenerContainerFactory(
+            ConsumerFactory<String, String> investigationResultConsumerFactory) {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(investigationResultConsumerFactory);
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        return factory;
+    }
 }

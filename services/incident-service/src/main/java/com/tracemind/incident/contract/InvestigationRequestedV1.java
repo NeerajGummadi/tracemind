@@ -16,6 +16,8 @@ public record InvestigationRequestedV1(
         String severity,
         Instant firstObservedAt,
         Instant lastObservedAt,
-        List<String> triggerSignalIds
+        List<String> triggerSignalIds,
+        String investigationRunId,
+        int inputSignalVersion
 ) {
 }

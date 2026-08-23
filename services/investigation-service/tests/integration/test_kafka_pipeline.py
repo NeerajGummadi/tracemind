@@ -129,6 +129,8 @@ async def test_investigation_requested_flows_through_ai_reasoning_to_published_r
             "firstObservedAt": now_epoch,
             "lastObservedAt": now_epoch,
             "triggerSignalIds": ["evt-1"],
+            "investigationRunId": "run-42",
+            "inputSignalVersion": 1,
         }
 
         result_consumer = AIOKafkaConsumer(
@@ -149,6 +151,7 @@ async def test_investigation_requested_flows_through_ai_reasoning_to_published_r
             result = await consume_until_key(result_consumer, b"INC-42")
 
             assert result["incidentId"] == "INC-42"
+            assert result["investigationRunId"] == "run-42"
             assert result["status"] == "COMPLETED"
             assert result["failureReason"] is None
             assert result["rootCauseAnalysis"]["probableRootCause"] == "Slow queries exhausted the connection pool"
@@ -230,6 +233,8 @@ async def test_ai_failure_still_publishes_a_failed_result_with_evidence(bootstra
             "firstObservedAt": now_epoch,
             "lastObservedAt": now_epoch,
             "triggerSignalIds": ["evt-2"],
+            "investigationRunId": "run-43",
+            "inputSignalVersion": 1,
         }
 
         result_consumer = AIOKafkaConsumer(
@@ -249,6 +254,7 @@ async def test_ai_failure_still_publishes_a_failed_result_with_evidence(bootstra
 
             result = await consume_until_key(result_consumer, b"INC-43")
 
+            assert result["investigationRunId"] == "run-43"
             assert result["status"] == "FAILED"
             assert result["failureReason"] == "MALFORMED_RESPONSE"
             assert result["rootCauseAnalysis"] is None

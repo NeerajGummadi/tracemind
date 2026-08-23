@@ -53,6 +53,18 @@ public class Incident {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    /** Milestone M - bumped every time a correlated signal attaches to this incident (Case B). */
+    @Column(name = "signal_version", nullable = false)
+    private int signalVersion;
+
+    /** Milestone M - the InvestigationRun currently RUNNING, or the most recently created one. Null only before the first run exists. */
+    @Column(name = "current_investigation_run_id")
+    private UUID currentInvestigationRunId;
+
+    /** Milestone M - set when a correlated signal arrives while a run is RUNNING; consumed when the follow-up run is launched. */
+    @Column(name = "needs_reinvestigation", nullable = false)
+    private boolean needsReinvestigation;
+
     protected Incident() {
         // JPA
     }
@@ -71,6 +83,8 @@ public class Incident {
         this.lastObservedAt = lastObservedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.signalVersion = 1;
+        this.needsReinvestigation = false;
     }
 
     /**
@@ -95,7 +109,7 @@ public class Incident {
                 now);
     }
 
-    /** Attaches an additional correlated signal: bumps lastObservedAt and escalates severity if warranted. */
+    /** Attaches an additional correlated signal: bumps lastObservedAt, escalates severity if warranted, and advances signalVersion. */
     public void recordAdditionalSignal(Instant signalObservedAt, String signalSeverity) {
         if (signalObservedAt.isAfter(this.lastObservedAt)) {
             this.lastObservedAt = signalObservedAt;
@@ -103,7 +117,30 @@ public class Incident {
         if (SeverityRanking.isHigherThan(signalSeverity, this.severity)) {
             this.severity = signalSeverity;
         }
+        this.signalVersion++;
         this.updatedAt = Instant.now();
+    }
+
+    public void setCurrentInvestigationRun(UUID investigationRunId) {
+        this.currentInvestigationRunId = investigationRunId;
+        this.updatedAt = Instant.now();
+    }
+
+    public void setNeedsReinvestigation(boolean needsReinvestigation) {
+        this.needsReinvestigation = needsReinvestigation;
+        this.updatedAt = Instant.now();
+    }
+
+    public int getSignalVersion() {
+        return signalVersion;
+    }
+
+    public UUID getCurrentInvestigationRunId() {
+        return currentInvestigationRunId;
+    }
+
+    public boolean isNeedsReinvestigation() {
+        return needsReinvestigation;
     }
 
     public UUID getId() {

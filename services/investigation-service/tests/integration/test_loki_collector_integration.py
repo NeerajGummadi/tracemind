@@ -98,7 +98,7 @@ async def test_collector_queries_a_real_loki_server_and_gets_real_grouped_eviden
         request = InvestigationRequestedV1(
             event_id="evt-1", schema_version="1.0", incident_id="INC-REAL-LOKI", primary_service="payment-service",
             environment="prod", severity="CRITICAL", first_observed_at=now, last_observed_at=now,
-            trigger_signal_ids=["evt-1"],
+            trigger_signal_ids=["evt-1"], investigation_run_id="run-1", input_signal_version=1,
         )
 
         collector = LokiLogsCollector(client=http_client, base_url=loki_base_url, window_seconds=60, max_entries=200)
