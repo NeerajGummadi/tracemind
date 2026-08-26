@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -64,6 +65,21 @@ public class Incident {
     /** Milestone M - set when a correlated signal arrives while a run is RUNNING; consumed when the follow-up run is launched. */
     @Column(name = "needs_reinvestigation", nullable = false)
     private boolean needsReinvestigation;
+
+    /**
+     * Milestone N - optimistic locking. SignalConsumerListener and
+     * InvestigationResultConsumerListener run on independent Kafka consumer
+     * threads and can concurrently load/mutate the same incident row (e.g.
+     * signalVersion vs. currentInvestigationRunId/needsReinvestigation) -
+     * without this, whichever transaction commits second silently
+     * overwrites the other's change with its own stale in-memory state.
+     * Hibernate fails the second commit instead; both listeners already
+     * propagate uncaught exceptions without acking, so Kafka redelivers and
+     * the retry succeeds against the current row version.
+     */
+    @Version
+    @Column(nullable = false)
+    private long version;
 
     protected Incident() {
         // JPA

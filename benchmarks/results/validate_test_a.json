@@ -1,0 +1,78 @@
+{
+  "offered_rps": 2.0,
+  "offered_count": 10,
+  "completed_count": 10,
+  "achieved_rps": 2.21,
+  "wall_elapsed_s": 4.523,
+  "latency_ms": {
+    "p50": 21.15,
+    "p95": 29.6,
+    "p99": 29.6,
+    "max": 29.6,
+    "mean": 20.22
+  },
+  "error_rate": 0.0,
+  "status_distribution": {
+    "202": 10
+  },
+  "raw_sample": [
+    {
+      "latency_ms": 29.6,
+      "status": 202
+    },
+    {
+      "latency_ms": 16.35,
+      "status": 202
+    },
+    {
+      "latency_ms": 23.13,
+      "status": 202
+    },
+    {
+      "latency_ms": 22.48,
+      "status": 202
+    },
+    {
+      "latency_ms": 23.36,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.91,
+      "status": 202
+    },
+    {
+      "latency_ms": 15.9,
+      "status": 202
+    },
+    {
+      "latency_ms": 15.19,
+      "status": 202
+    },
+    {
+      "latency_ms": 20.14,
+      "status": 202
+    },
+    {
+      "latency_ms": 21.15,
+      "status": 202
+    }
+  ],
+  "idempotency": {
+    "requests_sent": 10,
+    "distinct_fingerprint_startsat_pairs_sent": 10,
+    "event_ids_returned": 10,
+    "distinct_event_ids_returned": 10
+  },
+  "config": {
+    "base_url": "http://localhost:8081",
+    "rps": 2.0,
+    "duration": 5.0,
+    "run_id": "validate1",
+    "service_pool_size": 5,
+    "environments": "prod,staging",
+    "duplicate_rate": 0.0,
+    "max_in_flight": 500,
+    "capture_event_ids": true,
+    "output": "benchmarks/results/validate_test_a.json"
+  }
+}

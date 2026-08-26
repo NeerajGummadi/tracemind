@@ -1,0 +1,161 @@
+{
+  "offered_rps": 10.0,
+  "offered_count": 30,
+  "completed_count": 30,
+  "achieved_rps": 10.3,
+  "wall_elapsed_s": 2.913,
+  "latency_ms": {
+    "p50": 12.55,
+    "p95": 16.82,
+    "p99": 30.24,
+    "max": 30.24,
+    "mean": 13.26
+  },
+  "error_rate": 0.0,
+  "status_distribution": {
+    "202": 30
+  },
+  "raw_sample": [
+    {
+      "latency_ms": 30.24,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.55,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.55,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.82,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.77,
+      "status": 202
+    },
+    {
+      "latency_ms": 16.82,
+      "status": 202
+    },
+    {
+      "latency_ms": 15.13,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.14,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.5,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.36,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.88,
+      "status": 202
+    },
+    {
+      "latency_ms": 15.25,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.79,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.35,
+      "status": 202
+    },
+    {
+      "latency_ms": 15.24,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.69,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.42,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.36,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.42,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.96,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.97,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.53,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.28,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.96,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.75,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.56,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.87,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.35,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.96,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.16,
+      "status": 202
+    }
+  ],
+  "idempotency": {
+    "requests_sent": 30,
+    "distinct_fingerprint_startsat_pairs_sent": 30,
+    "event_ids_returned": 30,
+    "distinct_event_ids_returned": 30
+  },
+  "config": {
+    "base_url": "http://localhost:8081",
+    "rps": 10.0,
+    "duration": 3.0,
+    "run_id": "validateDup50",
+    "service_pool_size": 50,
+    "service_prefix": "svcvalc",
+    "environments": "prod,staging",
+    "duplicate_rate": 0.5,
+    "fixed_duplicate_pool_size": 0,
+    "max_in_flight": 500,
+    "capture_event_ids": true,
+    "workers": 1,
+    "output": "benchmarks/results/validate_c_dup50.json"
+  }
+}

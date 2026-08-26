@@ -1,0 +1,1547 @@
+[
+  {
+    "index": 0,
+    "event_id": "evt-87eba92ec267b24c",
+    "run_id": "1b2fecd2-d1dd-4136-80b8-268b1cd777f3",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 4.026,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1345,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 3091.604792047292,
+        "totalDurationMs": 3115.8345410367474,
+        "completionTokens": 187,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 22.60179095901549
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:53:31.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:53:31.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:53:31.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:48:42.121989Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:48:41.635483Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:48:45.215517Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Optimize database queries to reduce connection time.",
+          "Implement connection pooling best practices to manage connections more effectively."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "1b2fecd2-d1dd-4136-80b8-268b1cd777f3"
+    }
+  },
+  {
+    "index": 1,
+    "event_id": "evt-63135f1c5a8fc4aa",
+    "run_id": "733e5777-bfb5-410e-a6d4-115c22d93cba",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 3.716,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1347,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 2535.1518749957904,
+        "totalDurationMs": 2543.7800000654534,
+        "completionTokens": 189,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 7.46612495277077
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:53:31.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:53:31.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:53:31.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:48:46.202375Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:48:45.630489Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:48:48.738928Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Implement connection pooling best practices to manage connections more effectively.",
+          "Monitor database connection usage and adjust configurations as necessary."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "733e5777-bfb5-410e-a6d4-115c22d93cba"
+    }
+  },
+  {
+    "index": 2,
+    "event_id": "evt-21694ef13ddd5682",
+    "run_id": "3f4fb415-22f6-4086-88be-a900f41cf1cd",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 4.378,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1345,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 3163.422124926001,
+        "totalDurationMs": 3176.05604196433,
+        "completionTokens": 187,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 11.74229197204113
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:53:46.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:53:46.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:53:46.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:48:50.330919Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:48:49.432341Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:48:53.495477Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Optimize database queries to reduce connection time.",
+          "Implement connection pooling best practices to manage connections more effectively."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "3f4fb415-22f6-4086-88be-a900f41cf1cd"
+    }
+  },
+  {
+    "index": 3,
+    "event_id": "evt-21a99b40bc0241e6",
+    "run_id": "9800a902-c6dc-4b05-a68e-81e66d64de2d",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 3.156,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1345,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 2405.4728329647332,
+        "totalDurationMs": 2417.516582994722,
+        "completionTokens": 187,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 11.176791973412037
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:53:46.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:53:46.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:53:46.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:48:54.441445Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:48:53.895248Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:48:56.848021Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Optimize database queries to reduce connection time.",
+          "Implement connection pooling best practices to manage connections more effectively."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "9800a902-c6dc-4b05-a68e-81e66d64de2d"
+    }
+  },
+  {
+    "index": 4,
+    "event_id": "evt-0eeeed80776a460f",
+    "run_id": "2f6a1034-a136-4507-afc1-eea56ef7ae4f",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 3.074,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1345,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 2189.7630830062553,
+        "totalDurationMs": 2205.3170419530943,
+        "completionTokens": 187,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 14.730125083588064
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:53:46.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:53:46.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:53:46.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:48:57.517740Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:48:57.127374Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:48:59.708530Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Optimize database queries to reduce connection time.",
+          "Implement connection pooling best practices to manage connections more effectively."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "2f6a1034-a136-4507-afc1-eea56ef7ae4f"
+    }
+  },
+  {
+    "index": 5,
+    "event_id": "evt-2045cdaba6af696a",
+    "run_id": "40e93325-ca46-4123-8d20-b6bbb9efbfc5",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 3.192,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1348,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 2550.2623340580612,
+        "totalDurationMs": 2561.3747920142487,
+        "completionTokens": 190,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 10.127332992851734
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:53:46.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:53:46.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:53:46.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:49:00.590609Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:49:00.277166Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:49:03.142351Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection acquisition timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Implement connection pooling best practices to manage connections more effectively.",
+          "Monitor database connection usage and adjust configurations as necessary."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "40e93325-ca46-4123-8d20-b6bbb9efbfc5"
+    }
+  },
+  {
+    "index": 6,
+    "event_id": "evt-432ce7bdc722666b",
+    "run_id": "94a73428-c6af-4e9b-b63c-08c552e91dd6",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 2.49,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1345,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 2333.918333053589,
+        "totalDurationMs": 2341.885000001639,
+        "completionTokens": 187,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 7.385416072793305
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:49:03.659445Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:49:03.556322Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:49:05.994169Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Optimize database queries to reduce connection time.",
+          "Implement connection pooling best practices to manage connections more effectively."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "94a73428-c6af-4e9b-b63c-08c552e91dd6"
+    }
+  },
+  {
+    "index": 7,
+    "event_id": "evt-e69b539a435cdaf4",
+    "run_id": "156b6955-8bbd-4013-b93f-2904c5ac5590",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 3.751,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1345,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 2561.6687079891562,
+        "totalDurationMs": 2572.5018749944866,
+        "completionTokens": 187,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 10.214082896709442
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:49:06.744724Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:49:06.132513Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:49:09.307190Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Optimize database queries to reduce connection time.",
+          "Implement connection pooling best practices to manage connections more effectively."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "156b6955-8bbd-4013-b93f-2904c5ac5590"
+    }
+  },
+  {
+    "index": 8,
+    "event_id": "evt-9d88a4940d643919",
+    "run_id": "4cd3ce08-da16-4e89-a7a0-e4e6d2197e33",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 3.727,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1347,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 2263.693666900508,
+        "totalDurationMs": 2273.9910000236705,
+        "completionTokens": 189,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 9.35137493070215
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:49:10.834891Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:49:09.955452Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:49:13.099733Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Implement connection pooling best practices to manage connections more effectively.",
+          "Monitor database connection usage and adjust configurations as necessary."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "4cd3ce08-da16-4e89-a7a0-e4e6d2197e33"
+    }
+  },
+  {
+    "index": 9,
+    "event_id": "evt-02140c574e1de6ec",
+    "run_id": "41dddf50-c651-4880-9ac4-eed550751d3f",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 2.527,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1345,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 2044.2894590087235,
+        "totalDurationMs": 2054.321000003256,
+        "completionTokens": 187,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 8.844124968163669
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:49:13.908437Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:49:13.770468Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:49:15.954176Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Optimize database queries to reduce connection time.",
+          "Implement connection pooling best practices to manage connections more effectively."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "41dddf50-c651-4880-9ac4-eed550751d3f"
+    }
+  },
+  {
+    "index": 10,
+    "event_id": "evt-29b803cdb2bfe691",
+    "run_id": "933dfe91-3a67-4207-99dc-5b84bbc53aaf",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 3.103,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1347,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 2003.1706250738353,
+        "totalDurationMs": 2010.9763749642298,
+        "completionTokens": 189,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 7.151957950554788
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:54:01.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:49:16.995999Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:49:16.355956Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:49:19.000065Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Implement connection pooling best practices to manage connections more effectively.",
+          "Monitor database connection usage and adjust configurations as necessary."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "933dfe91-3a67-4207-99dc-5b84bbc53aaf"
+    }
+  },
+  {
+    "index": 11,
+    "event_id": "evt-31bc10bc6f513910",
+    "run_id": "09788bff-78fb-4bc5-aab0-51eb81d5e31f",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 3.106,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1315,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 2440.266542020254,
+        "totalDurationMs": 2452.4487500311807,
+        "completionTokens": 157,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 11.388915940187871
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:54:16.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:54:16.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:54:16.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:49:20.094454Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:49:19.535769Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:49:22.535681Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced connection issues due to the database connection pool being exhausted.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Optimize database queries to reduce connection time.",
+          "Implement connection pooling best practices."
+        ],
+        "probableRootCause": "The database connection pool reached its maximum capacity, leading to connection exhaustion.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "09788bff-78fb-4bc5-aab0-51eb81d5e31f"
+    }
+  },
+  {
+    "index": 12,
+    "event_id": "evt-9a3b8626a9e33426",
+    "run_id": "83a57eaa-4284-41cc-9c0d-3238c1b06cc7",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 3.771,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1345,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 3033.9260830078274,
+        "totalDurationMs": 3044.731416972354,
+        "completionTokens": 187,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 9.47062496561557
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:54:16.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:54:16.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:54:16.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:49:23.175230Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:49:22.716595Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:49:26.210763Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Optimize database queries to reduce connection time.",
+          "Implement connection pooling best practices to manage connections more effectively."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% capacity, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "83a57eaa-4284-41cc-9c0d-3238c1b06cc7"
+    }
+  },
+  {
+    "index": 13,
+    "event_id": "evt-d636d43601753700",
+    "run_id": "4fb97480-b81d-4cde-8974-16d4f4c694ef",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 3.123,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1345,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 2189.5748750539497,
+        "totalDurationMs": 2200.0046669272706,
+        "completionTokens": 187,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 9.43441700655967
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:54:16.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:54:16.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:54:16.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:49:27.272498Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:49:26.574543Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:49:29.463338Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Optimize database queries to reduce connection time.",
+          "Implement connection pooling best practices to manage connections more effectively."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "4fb97480-b81d-4cde-8974-16d4f4c694ef"
+    }
+  },
+  {
+    "index": 14,
+    "event_id": "evt-cd82985e9089a6ff",
+    "run_id": "b9d24158-fb89-4167-bb1d-7272e091eef1",
+    "incident_number": "INC-2264",
+    "client_wall_time_s": 3.158,
+    "result": {
+      "status": "COMPLETED",
+      "metrics": {
+        "model": "gpt-4o-mini-2024-07-18",
+        "totalTokens": 1345,
+        "promptTokens": 1158,
+        "openAiLatencyMs": 2203.7860000273213,
+        "totalDurationMs": 2216.9825000455603,
+        "completionTokens": 187,
+        "estimatedApiCostUsd": null,
+        "evidenceCollectionDurationMs": 12.383082997985184
+      },
+      "evidence": {
+        "logs": [
+          {
+            "fact": "\"Connection pool exhausted\" occurred 5 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-1",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 5
+          },
+          {
+            "fact": "\"Database connection unavailable\" occurred 3 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-2",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 3
+          },
+          {
+            "fact": "\"Hikari connection acquisition timeout\" occurred 73 time(s)",
+            "entity": "payment-service",
+            "evidenceId": "E-INC-2264-LOG-3",
+            "observedAt": "2026-08-26T00:40:40.351179Z",
+            "occurrences": 73
+          }
+        ],
+        "metrics": [
+          {
+            "fact": "Active DB connections: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_active",
+            "observedAt": "2026-08-26T00:54:16.980000Z"
+          },
+          {
+            "fact": "Maximum DB connection pool size: 100.0",
+            "unit": "connections",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_max",
+            "observedAt": "2026-08-26T00:54:16.980000Z"
+          },
+          {
+            "fact": "DB connection pool utilization reached 100.0%",
+            "unit": "percent",
+            "value": 100.0,
+            "entity": "payment-service-db",
+            "evidenceId": "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+            "observedAt": "2026-08-26T00:54:16.980000Z"
+          }
+        ],
+        "incidentId": "INC-2264",
+        "collectedAt": "2026-08-26T00:49:30.351407Z",
+        "dependencies": [
+          {
+            "fact": "payment-service depends on payment-service-db",
+            "entity": "payment-service",
+            "dependsOn": "payment-service-db",
+            "evidenceId": "E-INC-2264-DEP-1",
+            "observedAt": "2026-08-26T00:49:29.765412Z"
+          }
+        ]
+      },
+      "incidentId": "INC-2264",
+      "generatedAt": "2026-08-26T00:49:32.556097Z",
+      "failureReason": null,
+      "schemaVersion": "1.0",
+      "rootCauseAnalysis": {
+        "summary": "The payment service experienced issues due to an exhausted database connection pool, leading to connection timeouts and unavailability of database connections.",
+        "confidence": 1.0,
+        "incidentId": "INC-2264",
+        "remediationSteps": [
+          "Increase the maximum size of the database connection pool.",
+          "Optimize database queries to reduce connection time.",
+          "Implement connection pooling best practices to manage connections more effectively."
+        ],
+        "probableRootCause": "The database connection pool was fully utilized, reaching 100% utilization, which caused the connection pool to exhaust and resulted in connection acquisition timeouts.",
+        "supportingEvidenceIds": [
+          "E-INC-2264-METRIC-db_connection_pool_utilization_percent",
+          "E-INC-2264-LOG-1",
+          "E-INC-2264-LOG-3"
+        ]
+      },
+      "investigationRunId": "b9d24158-fb89-4167-bb1d-7272e091eef1"
+    }
+  }
+]

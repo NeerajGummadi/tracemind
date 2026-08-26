@@ -1,0 +1,442 @@
+{
+  "offered_rps": 200.0,
+  "offered_count": 100,
+  "completed_count": 100,
+  "achieved_rps": 200.66,
+  "wall_elapsed_s": 0.498,
+  "latency_ms": {
+    "p50": 6.91,
+    "p95": 12.25,
+    "p99": 22.25,
+    "max": 22.25,
+    "mean": 6.02
+  },
+  "error_rate": 0.0,
+  "status_distribution": {
+    "202": 100
+  },
+  "raw_sample": [
+    {
+      "latency_ms": 17.05,
+      "status": 202
+    },
+    {
+      "latency_ms": 22.25,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.14,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.25,
+      "status": 202
+    },
+    {
+      "latency_ms": 4.66,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.76,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.14,
+      "status": 202
+    },
+    {
+      "latency_ms": 3.06,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.69,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.31,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.39,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.98,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.79,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.27,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.72,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.22,
+      "status": 202
+    },
+    {
+      "latency_ms": 3.12,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.64,
+      "status": 202
+    },
+    {
+      "latency_ms": 3.11,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.65,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.07,
+      "status": 202
+    },
+    {
+      "latency_ms": 1.66,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.92,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.72,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.66,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.34,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.08,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.58,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.42,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.14,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.16,
+      "status": 202
+    },
+    {
+      "latency_ms": 1.81,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.12,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.93,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.0,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.04,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.33,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.4,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.25,
+      "status": 202
+    },
+    {
+      "latency_ms": 1.82,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.19,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.56,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.43,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.97,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.35,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.6,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.38,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.4,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.57,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.51,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.74,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.34,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.72,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.4,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.64,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.7,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.23,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.02,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.11,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.48,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.71,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.05,
+      "status": 202
+    },
+    {
+      "latency_ms": 3.24,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.91,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.12,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.08,
+      "status": 202
+    },
+    {
+      "latency_ms": 3.49,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.58,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.5,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.71,
+      "status": 202
+    },
+    {
+      "latency_ms": 3.89,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.95,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.54,
+      "status": 202
+    },
+    {
+      "latency_ms": 3.78,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.81,
+      "status": 202
+    },
+    {
+      "latency_ms": 17.41,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.35,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.54,
+      "status": 202
+    },
+    {
+      "latency_ms": 3.56,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.06,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.05,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.54,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.41,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.49,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.33,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.31,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.03,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.78,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.19,
+      "status": 202
+    },
+    {
+      "latency_ms": 3.04,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.94,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.28,
+      "status": 202
+    },
+    {
+      "latency_ms": 1.6,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.99,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.77,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.01,
+      "status": 202
+    },
+    {
+      "latency_ms": 5.88,
+      "status": 202
+    },
+    {
+      "latency_ms": 6.49,
+      "status": 202
+    },
+    {
+      "latency_ms": 2.58,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.0,
+      "status": 202
+    }
+  ],
+  "idempotency": {
+    "requests_sent": 100,
+    "distinct_fingerprint_startsat_pairs_sent": 100,
+    "event_ids_returned": 100,
+    "distinct_event_ids_returned": 100
+  },
+  "config": {
+    "base_url": "http://localhost:8081",
+    "rps": 200.0,
+    "duration": 0.5,
+    "run_id": "testDstorm100v2",
+    "service_pool_size": 1,
+    "service_prefix": "svcdstorm100v2",
+    "environments": "prod",
+    "duplicate_rate": 0.0,
+    "fixed_duplicate_pool_size": 0,
+    "duplicate_seed_count": 50,
+    "max_in_flight": 500,
+    "capture_event_ids": true,
+    "workers": 1,
+    "output": "benchmarks/results/test_d_storm100.json"
+  }
+}

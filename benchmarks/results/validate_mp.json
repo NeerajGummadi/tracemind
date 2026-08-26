@@ -1,0 +1,639 @@
+{
+  "offered_rps": 50.0,
+  "offered_count": 150,
+  "completed_count": 150,
+  "achieved_rps": 47.6,
+  "wall_elapsed_s": 3.151,
+  "latency_ms": {
+    "p50": 12.44,
+    "p95": 25.42,
+    "p99": 30.38,
+    "max": 30.4,
+    "mean": 12.64
+  },
+  "error_rate": 0.0,
+  "status_distribution": {
+    "202": 150
+  },
+  "raw_sample": [
+    {
+      "latency_ms": 30.34,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.91,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.0,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.44,
+      "status": 202
+    },
+    {
+      "latency_ms": 15.05,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.21,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.03,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.19,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.02,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.91,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.68,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.04,
+      "status": 202
+    },
+    {
+      "latency_ms": 25.42,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.05,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.27,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.79,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.26,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.1,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.14,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.68,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.83,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.33,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.19,
+      "status": 202
+    },
+    {
+      "latency_ms": 16.81,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.42,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.89,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.85,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.44,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.45,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.31,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.14,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.97,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.09,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.42,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.55,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.26,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.36,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.51,
+      "status": 202
+    },
+    {
+      "latency_ms": 30.37,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.88,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.0,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.81,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.88,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.09,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.33,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.27,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.48,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.0,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.7,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.01,
+      "status": 202
+    },
+    {
+      "latency_ms": 25.71,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.08,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.05,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.64,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.29,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.18,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.94,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.6,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.85,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.9,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.07,
+      "status": 202
+    },
+    {
+      "latency_ms": 17.08,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.42,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.46,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.89,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.5,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.45,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.33,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.72,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.98,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.13,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.49,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.01,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.41,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.78,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.48,
+      "status": 202
+    },
+    {
+      "latency_ms": 30.38,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.98,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.12,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.56,
+      "status": 202
+    },
+    {
+      "latency_ms": 15.0,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.07,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.64,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.24,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.04,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.11,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.45,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.03,
+      "status": 202
+    },
+    {
+      "latency_ms": 26.18,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.14,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.05,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.78,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.93,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.03,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.95,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.47,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.08,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.92,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.08,
+      "status": 202
+    },
+    {
+      "latency_ms": 17.13,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.63,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.41,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.88,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.64,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.08,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.33,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.37,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.98,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.15,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.71,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.01,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.2,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.65,
+      "status": 202
+    },
+    {
+      "latency_ms": 30.4,
+      "status": 202
+    },
+    {
+      "latency_ms": 7.92,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.96,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.61,
+      "status": 202
+    },
+    {
+      "latency_ms": 15.42,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.61,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.38,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.21,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.97,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.8,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.61,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.0,
+      "status": 202
+    },
+    {
+      "latency_ms": 26.16,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.08,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.05,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.74,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.53,
+      "status": 202
+    },
+    {
+      "latency_ms": 12.21,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.84,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.31,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.83,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.32,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.08,
+      "status": 202
+    },
+    {
+      "latency_ms": 16.98,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.43,
+      "status": 202
+    },
+    {
+      "latency_ms": 13.91,
+      "status": 202
+    },
+    {
+      "latency_ms": 10.91,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.45,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.42,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.31,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.2,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.98,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.12,
+      "status": 202
+    },
+    {
+      "latency_ms": 8.62,
+      "status": 202
+    },
+    {
+      "latency_ms": 9.51,
+      "status": 202
+    },
+    {
+      "latency_ms": 11.35,
+      "status": 202
+    },
+    {
+      "latency_ms": 14.25,
+      "status": 202
+    }
+  ],
+  "idempotency": {
+    "requests_sent": 150,
+    "distinct_fingerprint_startsat_pairs_sent": 150,
+    "event_ids_returned": 150,
+    "distinct_event_ids_returned": 150
+  },
+  "config": {
+    "base_url": "http://localhost:8081",
+    "rps": 50.0,
+    "duration": 3.0,
+    "run_id": "validateMP",
+    "service_pool_size": 20,
+    "environments": "prod,staging",
+    "duplicate_rate": 0.0,
+    "max_in_flight": 500,
+    "capture_event_ids": true,
+    "workers": 4,
+    "output": "benchmarks/results/validate_mp.json"
+  }
+}

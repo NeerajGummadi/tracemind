@@ -1,0 +1,13 @@
+t,group,total_lag,partitions
+0.0,incident-service,0,6
+1.99,incident-service,41,6
+3.99,incident-service,40,6
+5.99,incident-service,33,6
+7.96,incident-service,18,6
+9.92,incident-service,28,6
+11.93,incident-service,40,6
+13.93,incident-service,7,6
+15.93,incident-service,7,6
+17.92,incident-service,6,6
+19.88,incident-service,44,6
+21.86,incident-service,0,6

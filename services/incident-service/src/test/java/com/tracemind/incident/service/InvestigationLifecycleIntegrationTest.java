@@ -15,6 +15,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Milestone M - the investigation-coalescing algorithm end to end: signal
@@ -260,6 +262,32 @@ class InvestigationLifecycleIntegrationTest {
         investigationResultService.handleResult(completedResultJson(UUID.randomUUID()));
         // No exception, no state created - this just proves the defensive lookup path.
         assertThat(investigationRunRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    void concurrentMutationsFromIndependentTransactionsDoNotSilentlyLoseAnUpdate() {
+        // Milestone N, Test D: SignalConsumerListener and InvestigationResultConsumerListener run
+        // on independent Kafka consumer threads and can load/mutate the same incident row
+        // concurrently. This simulates that race directly: two separate transactions load the
+        // same row, each mutates a different field, and the second save must fail loudly
+        // (optimistic lock conflict) rather than silently overwriting the first transaction's
+        // change with its own stale in-memory state.
+        signalIngestionService.ingest(signalFor("payment-service", Instant.now()));
+        Incident incident = onlyIncident();
+
+        Incident loadedByThreadA = incidentRepository.findById(incident.getId()).orElseThrow();
+        Incident loadedByThreadB = incidentRepository.findById(incident.getId()).orElseThrow();
+
+        loadedByThreadA.recordAdditionalSignal(Instant.now(), "CRITICAL");
+        incidentRepository.saveAndFlush(loadedByThreadA);
+
+        loadedByThreadB.setNeedsReinvestigation(true);
+        assertThatThrownBy(() -> incidentRepository.saveAndFlush(loadedByThreadB))
+                .isInstanceOf(ObjectOptimisticLockingFailureException.class);
+
+        // Thread A's update must not have been lost.
+        Incident reloaded = incidentRepository.findById(incident.getId()).orElseThrow();
+        assertThat(reloaded.getSignalVersion()).isEqualTo(2);
     }
 
     private Incident onlyIncident() {

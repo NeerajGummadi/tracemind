@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 from contextlib import asynccontextmanager
 
 import httpx
@@ -7,6 +8,7 @@ from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from fastapi import FastAPI
 
 from investigation_service.ai.ai_investigation_service import AIInvestigationService
+from investigation_service.ai.ai_test_double import DeterministicAIInvestigationDouble
 from investigation_service.ai.openai_client import create_openai_client
 from investigation_service.ai.prompt_builder import PromptBuilder
 from investigation_service.collectors.loki import LokiLogsCollector
@@ -41,13 +43,22 @@ async def lifespan(app: FastAPI):
     # Loaded once, fails fast on a malformed file - never per-investigation I/O.
     dependency_topology = load_topology(settings.dependency_graph_path)
 
-    ai_investigation_service = AIInvestigationService(
-        client=create_openai_client(settings),
-        prompt_builder=PromptBuilder(),
-        model=settings.openai_model,
-        temperature=settings.openai_temperature,
-        max_output_tokens=settings.openai_max_output_tokens,
-    )
+    # Milestone N, Test D only: swaps the real OpenAI-backed AI reasoning step for a
+    # deterministic double so investigation lifecycle/coalescing stress tests can run at volume
+    # with zero real OpenAI calls, while everything else (Kafka, evidence collection, Incident
+    # Service's real lifecycle logic) stays real. Unset/false in every other path - production
+    # behavior is unchanged unless this is explicitly opted into.
+    if os.environ.get("AI_TEST_DOUBLE", "").lower() == "true":
+        logger.warning("AI_TEST_DOUBLE=true - using DeterministicAIInvestigationDouble, no real OpenAI calls will be made")
+        ai_investigation_service = DeterministicAIInvestigationDouble()
+    else:
+        ai_investigation_service = AIInvestigationService(
+            client=create_openai_client(settings),
+            prompt_builder=PromptBuilder(),
+            model=settings.openai_model,
+            temperature=settings.openai_temperature,
+            max_output_tokens=settings.openai_max_output_tokens,
+        )
     orchestrator = InvestigationOrchestrator(
         metrics_collector=PrometheusMetricsCollector(
             client=prometheus_http_client,

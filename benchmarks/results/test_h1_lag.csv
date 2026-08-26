@@ -1,0 +1,15 @@
+t,group,total_lag,partitions
+0.0,investigation-service,150,3
+1.46,investigation-service,150,3
+2.97,investigation-service,150,3
+4.44,investigation-service,0,3
+5.95,investigation-service,0,3
+7.47,investigation-service,0,3
+9.05,investigation-service,0,3
+10.58,investigation-service,0,3
+12.15,investigation-service,0,3
+13.7,investigation-service,0,3
+15.23,investigation-service,0,3
+16.78,investigation-service,0,3
+18.28,investigation-service,0,3
+19.83,investigation-service,0,3
