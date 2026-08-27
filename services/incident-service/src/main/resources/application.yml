@@ -30,7 +30,7 @@ spring:
 outbox:
   publisher:
     batch-size: 50
-    poll-interval-ms: 1000
+    poll-interval-ms: 50
     send-timeout-ms: 5000
 
 server:

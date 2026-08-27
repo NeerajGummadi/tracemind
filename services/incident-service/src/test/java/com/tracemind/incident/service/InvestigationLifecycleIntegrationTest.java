@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -40,6 +41,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  */
 @Testcontainers
 @SpringBootTest
+// Same guard as OutboxPublisherIntegrationTest/SignalIngestionServiceIntegrationTest: this class
+// asserts on raw outbox_events state, so the real @Scheduled OutboxPublisher poller must not run
+// concurrently and race those assertions/cleanup.
+@TestPropertySource(properties = "outbox.publisher.poll-interval-ms=3600000")
 class InvestigationLifecycleIntegrationTest {
 
     @Container

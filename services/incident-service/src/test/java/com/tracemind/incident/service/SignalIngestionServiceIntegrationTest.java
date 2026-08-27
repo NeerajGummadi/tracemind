@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -27,6 +28,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Testcontainers
 @SpringBootTest
+// Same guard as OutboxPublisherIntegrationTest: this class asserts on raw outbox_events state
+// directly, so the real @Scheduled OutboxPublisher poller must not run concurrently and race
+// those assertions/cleanup - previously masked only because 1000ms rarely coincided with this
+// class's ~4s run, not because it was actually disabled.
+@TestPropertySource(properties = "outbox.publisher.poll-interval-ms=3600000")
 class SignalIngestionServiceIntegrationTest {
 
     @Container
